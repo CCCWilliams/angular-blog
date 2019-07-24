@@ -1,7 +1,7 @@
 <li [ngClass]="{'list-group-item': true,
                 'list-group-item-success': postLoveIt > 0,
                 'list-group-item-danger': postLoveIt < 0}">
-  <em class="float-right">{{postCreated | date: 'dd/MM/yyyy, hh:mm a'}}</em>
+  <em class="float-right">{{postCreated | date: 'dd/MM/yyyy, HH:mm'}}</em>
   <h4 [ngStyle]="{color: getColor()}">{{postTitle}}</h4>
   <p [ngStyle]="{color: getColor()}">{{postContent}}</p>
   <button class="btn btn-success"

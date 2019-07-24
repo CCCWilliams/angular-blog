@@ -1,22 +1,49 @@
+import {Injectable} from '@angular/core';
+import {Post} from '../models/post.model';
+import {Subject} from 'rxjs';
+
+import * as firebase from 'firebase';
+
+@Injectable()
 export class PostService {
-  posts = [
-    {
-        title: 'Mon premier post',
-        content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis fringilla nisi at fermentum vulputate. Praesent elementum dui ac feugiat tempor. Donec sapien sapien, sagittis no',
-        loveIts: 2,
-        created_at: new Date()
-    },
-    {
-        title: 'Mon deuxieme post',
-        content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis fringilla nisi at fermentum vulputate. Praesent elementum dui ac feugiat tempor. Donec sapien sapien, sagittis no',
-        loveIts: -1,
-        created_at: new Date()
-    },
-    {
-        title: 'Mon troisime post',
-        content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis fringilla nisi at fermentum vulputate. Praesent elementum dui ac feugiat tempor. Donec sapien sapien, sagittis no',
-        loveIts: 0,
-        created_at: new Date()
-    }
-  ];
+  posts: Post[] = [];
+  postsSubject = new Subject<Post[]>();
+
+  constructor() {
+    this.getPost();
+  }
+  emitPosts() {
+    this.postsSubject.next(this.posts);
+  }
+  getPost() {
+    firebase.database().ref('/posts')
+      .on('value', (data: firebase.database.DataSnapshot) => {
+          this.posts = data.val() ? data.val() : [];
+          this.emitPosts();
+        }
+      );
+  }
+
+  savePosts() {
+    firebase.database().ref('/posts').set(this.posts);
+  }
+
+  removePost(post: Post) {
+    const postIndexToRemove = this.posts.findIndex(
+      (postEl) => {
+        if (postEl === post) {
+          return true;
+        }
+      }
+    );
+    this.posts.splice(postIndexToRemove, 1);
+    this.savePosts();
+    this.emitPosts();
+  }
+
+  createNewPost(newPost: Post) {
+      this.posts.push(newPost);
+      this.savePosts();
+      this.emitPosts();
+  }
 }
