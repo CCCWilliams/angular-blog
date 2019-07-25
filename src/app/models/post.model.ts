@@ -1,6 +1,6 @@
 export class Post {
   loveIts: number;
-  createdat: string;
+  createdat: string; //Probleme avec le format date resolu
 
 
   constructor(public title: string, public content: string) {

@@ -29,7 +29,6 @@ export class NewPostComponent implements OnInit {
     const title = this.postForm.get('title').value;
     const newPost = new Post(title, content);
     newPost.loveIts = 0;
-    //newPost.createdat = new Date();
     newPost.createdat= (new Date()).toString();
     this.postService.createNewPost(newPost);
 
