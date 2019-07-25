@@ -23,8 +23,8 @@ export class PostService {
         }
       );
   }
-
   savePosts() {
+    console.log(this.posts);
     firebase.database().ref('/posts').set(this.posts);
   }
 
@@ -41,8 +41,15 @@ export class PostService {
     this.emitPosts();
   }
 
+  changeLikesPost(post: Post, action: number) {
+    post.loveIts += action;
+    this.savePosts();
+    this.emitPosts();
+  }
+
   createNewPost(newPost: Post) {
       this.posts.push(newPost);
+      console.log(this.posts);
       this.savePosts();
       this.emitPosts();
   }
